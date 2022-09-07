@@ -98,6 +98,10 @@ java_binary_host {
     libs: ["junit"],
 }
 
+// Filter out warnings produced by OpenJDK to stdout, otherwise these warnings
+// make it into generated Java files (b/240131965).
+// TODO: Remove the filter is OpenJDK stops writing the warning to stdout (see
+// https://bugs.openjdk.org/browse/JDK-8270087).
 genrule {
     name: "guice_munged_srcs",
     srcs: [":guice_srcs"],
@@ -108,7 +112,8 @@ genrule {
     ],
     cmd: "for src in $(in); do " +
         "  mkdir -p $$(dirname $(genDir)/$${src}) && " +
-        "  $(location guice_munge) -DNO_AOP $${src} > $(genDir)/$${src} || exit 1; " +
+        "  $(location guice_munge) -DNO_AOP $${src} | " +
+        "   sed '/Duplicate cpuset controllers detected/d' > $(genDir)/$${src} || exit 1; " +
         " done && " +
         " $(location soong_zip) -o $(out) -C $(genDir) -D $(genDir)",
 }
