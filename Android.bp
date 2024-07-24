@@ -108,7 +108,7 @@ genrule {
     ],
     cmd: "for src in $(in); do " +
         "  mkdir -p $$(dirname $(genDir)/$${src}) && " +
-        "  $(location guice_munge) -DNO_AOP $${src} > $(genDir)/$${src} || exit 1; " +
+        "  $(location guice_munge) -DNO_AOP $${src} $(genDir)/$${src} || exit 1; " +
         " done && " +
         " $(location soong_zip) -o $(out) -C $(genDir) -D $(genDir)",
 }
@@ -118,9 +118,10 @@ genrule {
 java_library_static {
     name: "guice",
     visibility: [
-       "//external/testng:__pkg__",
-       "//platform_testing/libraries/audio-test-harness/server:__pkg__",
-       "//tools/tradefederation/core:__pkg__",
+        "//external/testng:__pkg__",
+        "//platform_testing/libraries/audio-test-harness/server:__pkg__",
+        "//tools/tradefederation/core:__pkg__",
+        "//vendor:__subpackages__",
     ],
     host_supported: true,
     hostdex: true,
@@ -136,10 +137,10 @@ java_library_static {
 java_library_static {
     name: "guice-no-guava",
     visibility: [
-       "//device/google/cuttlefish/tests/integration:__pkg__",
-       "//external/testng:__pkg__",
-       "//platform_testing/libraries/audio-test-harness/server:__pkg__",
-       "//tools/tradefederation/core:__pkg__",
+        "//device/google/cuttlefish/tests/integration:__pkg__",
+        "//external/testng:__pkg__",
+        "//platform_testing/libraries/audio-test-harness/server:__pkg__",
+        "//tools/tradefederation/core:__pkg__",
     ],
     host_supported: true,
     hostdex: true,
